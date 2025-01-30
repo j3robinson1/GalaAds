@@ -54,9 +54,9 @@ async function getAds(req, res) {
     if (walletAddress) {
         if (profile) {
             query = query.eq('user_wallet', walletAddress);
-            query = query.eq('published', true);
         } else {
             query = query.not('user_wallet', 'eq', walletAddress);
+            query = query.eq('published', true);
         }
     }
 
