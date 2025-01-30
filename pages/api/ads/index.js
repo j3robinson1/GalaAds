@@ -51,12 +51,15 @@ async function getAds(req, res) {
         query = query.not('boost_level', 'eq', 0); 
     }
 
+    if (!profile || !walletAddress) {
+        query = query.eq('published', true);
+    }
+
     if (walletAddress) {
         if (profile) {
             query = query.eq('user_wallet', walletAddress);
         } else {
             query = query.not('user_wallet', 'eq', walletAddress);
-            query = query.eq('published', true);
         }
     }
 
