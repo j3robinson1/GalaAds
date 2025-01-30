@@ -212,6 +212,9 @@ const AdDetail = () => {
                   </svg>
                   <span>{ad.clicks_count}</span>
                 </div>
+                <div className="stat">
+                  <span>Status: {ad.published ? 'Published' : 'Under Review'}</span>
+                </div>
                 <a href={ad.url} target="_blank" rel="noopener noreferrer">Ad Link</a>
                 {message && <p>{message}</p>}
               </div>
