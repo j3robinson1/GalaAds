@@ -37,27 +37,25 @@ async function createAd(req, res) {
 }
 
 
-// Function to get all ads, optionally excluding ads with the specified wallet address and/or with boost_level of 0
 async function getAds(req, res) {
     const walletAddress = req.query.walletAddress;
-    const includeZeroBoost = req.query.includeZeroBoost === 'true'; // Check if includeZeroBoost parameter is true
-    const profile = req.query.profile === 'true'; // Check if ads from the profile should be included
+    const includeZeroBoost = req.query.includeZeroBoost === 'true'; 
+    const profile = req.query.profile === 'true'; 
 
     let query = supabase
         .from('ads')
         .select('*')
-        .order('boost_level', { ascending: false }); // Order by boost_level in descending order
+        .eq('published', true)
+        .order('boost_level', { ascending: false }); 
 
     if (!includeZeroBoost) {
-        query = query.not('boost_level', 'eq', 0); // Exclude ads where boost_level is 0 unless includeZeroBoost is true
+        query = query.not('boost_level', 'eq', 0); 
     }
 
     if (walletAddress) {
         if (profile) {
-            // If profile is true, include ads that match the walletAddress
             query = query.eq('user_wallet', walletAddress);
         } else {
-            // Default behavior: exclude ads with the matching wallet address
             query = query.not('user_wallet', 'eq', walletAddress);
         }
     }
@@ -68,11 +66,9 @@ async function getAds(req, res) {
         return res.status(400).json({ error: error.message });
     }
 
-    // Randomize ads with the same boost_level
     const randomizedData = data.reduce((acc, current) => {
         const index = acc.findIndex(item => item.boost_level === current.boost_level);
         if (index !== -1) {
-            // Insert current item at a random position within its boost_level group
             const insertionPoint = index + Math.floor(Math.random() * (acc.filter(item => item.boost_level === current.boost_level).length));
             acc.splice(insertionPoint, 0, current);
         } else {
