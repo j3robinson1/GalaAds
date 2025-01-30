@@ -8,8 +8,10 @@ const WalletConnect = ({ onConnect }) => {
   const { walletAddress, setWalletAddress, metamaskClient, setMetamaskClient } = useWallet();
 
   useEffect(() => {
-    const client = new BrowserConnectClient();
-    setMetamaskClient(client);
+    if (typeof window.ethereum !== 'undefined') {
+      const client = new BrowserConnectClient();
+      setMetamaskClient(client);
+    }
   }, []);
 
   const connectWallet = async () => {
