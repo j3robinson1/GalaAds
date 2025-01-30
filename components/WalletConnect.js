@@ -13,18 +13,20 @@ const WalletConnect = ({ onConnect }) => {
   }, []);
 
   const connectWallet = async () => {
-    try {
-      await metamaskClient.connect();
-      let address = await metamaskClient.ethereumAddress;
-      if (address.startsWith('0x')) {
-        address = `eth|${address.slice(2)}`;
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        await metamaskClient.connect();
+        let address = await metamaskClient.ethereumAddress;
+        if (address.startsWith('0x')) {
+          address = `eth|${address.slice(2)}`;
+        }
+        setWalletAddress(address);
+        onConnect(address, true, metamaskClient);
+        await checkRegistration(address);
+      } catch (err) {
+        console.error('Error connecting wallet:', err);
+        onConnect('', false, null);
       }
-      setWalletAddress(address);
-      onConnect(address, true, metamaskClient);
-      await checkRegistration(address);
-    } catch (err) {
-      console.error('Error connecting wallet:', err);
-      onConnect('', false, null);
     }
   };
 
