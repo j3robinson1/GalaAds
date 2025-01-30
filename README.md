@@ -1,4 +1,4 @@
-# Galachain Connect NextJS
+# GalaAds
 
 A Next.js-based web application designed to showcase achievements and connect users' wallets for interactions within the GalaChain ecosystem.
 
@@ -13,8 +13,8 @@ A Next.js-based web application designed to showcase achievements and connect us
 ### Clone the repository
 
 ```bash
-git clone https://github.com/j3robinson1/Galachain-Connect-NextJS.git
-cd Galachain-Connect-NextJS
+git clone https://github.com/j3robinson1/GalaAds.git
+cd GalaAds
 ```
 
 ## Setup and Installation
