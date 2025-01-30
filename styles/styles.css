@@ -1,0 +1,63 @@
+header {
+    background: linear-gradient(55deg, #252525, #353535 50%, #555555 80%, #353535);
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    margin-right: 15px;
+    padding: 5px 10px;
+}
+
+header .wallet-address, .wallet-connect .button {
+    margin: 0px;
+    padding: 8.5px 15px;
+    background: #1e1e1e;
+    border-radius: 5px;
+    border:  none;
+    color:  white;
+    cursor: pointer;
+}
+
+body {
+  background-color: #0f1014;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  margin:  0px;
+}
+
+.stat svg, .stat span {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.ad-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 20px;
+}
+
+.ad-container .ad-tile {
+  flex: 1 0 300px;
+  max-width: 300px;
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  background: linear-gradient(55deg, #191919, #353535 50%, #555555 80%, #353535);
+  border-radius: 10px;
+}
+
+.ad-container .ad-tile h2 {
+    margin: 10px 0px;
+}
+
+.ad-container .ad-tile img {
+    border-radius: 5px;
+}
+
+.grecaptcha-badge {
+    transform: scale(0.01);
+}
+
+
