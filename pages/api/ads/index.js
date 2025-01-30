@@ -45,7 +45,6 @@ async function getAds(req, res) {
     let query = supabase
         .from('ads')
         .select('*')
-        .eq('published', true)
         .order('boost_level', { ascending: false }); 
 
     if (!includeZeroBoost) {
@@ -55,6 +54,7 @@ async function getAds(req, res) {
     if (walletAddress) {
         if (profile) {
             query = query.eq('user_wallet', walletAddress);
+            query = query.eq('published', true);
         } else {
             query = query.not('user_wallet', 'eq', walletAddress);
         }
