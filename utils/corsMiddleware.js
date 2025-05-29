@@ -3,7 +3,7 @@ import Cors from 'cors';
 const allowedDomain = 'https://ads.fuzzleprime.com';
 
 const cors = Cors({
-  methods: ['GET', 'HEAD'],
+  methods: ['GET', 'HEAD', 'POST', 'PATCH'],
   origin: (origin, callback) => {
     if (!origin || origin === allowedDomain) {
       callback(null, true);
