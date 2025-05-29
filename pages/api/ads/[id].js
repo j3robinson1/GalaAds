@@ -1,13 +1,15 @@
 import { supabase } from '../../../utils/supabaseClient';
-import { cors, runMiddleware } from '../../../utils/corsMiddleware';  // Update the path as necessary
+import { cors, runMiddleware } from '../../../utils/corsMiddleware';
 
 export default async function handler(req, res) {
     await runMiddleware(req, res, cors);
 
     const referer = req.headers.referer;
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
-    if (!referer || !referer.startsWith('https://ads.fuzzleprime.com')) {
-      return res.status(403).json({ message: 'Unauthorized: This service can only be accessed from the specified iframe.' });
+    if (!referer || (!isDevelopment && !referer.startsWith('https://ads.fuzzleprime.com')) || 
+        (isDevelopment && !referer.startsWith('http://localhost:3000') && !referer.startsWith('https://localhost:3000'))) {
+      return res.status(403).json({ message: 'Unauthorized: Invalid referer.' });
     }
     
     const { id } = req.query;
@@ -23,7 +25,6 @@ export default async function handler(req, res) {
     }
 }
 
-// Function to get a specific ad by ID
 async function getAdById(req, res, id) {
     const { data, error } = await supabase
         .from('ads')
@@ -38,12 +39,10 @@ async function getAdById(req, res, id) {
     }
 }
 
-// Function to update an ad by ID
 async function updateAdById(req, res, id) {
     const { boost_level } = req.body;
 
     try {
-        // Retrieve the current boost level
         const { data: currentAdData, error: getError } = await supabase
             .from('ads')
             .select('boost_level')
@@ -52,10 +51,8 @@ async function updateAdById(req, res, id) {
 
         if (getError) throw getError;
 
-        // Calculate new boost level
         const newBoostLevel = parseFloat(currentAdData.boost_level) + parseFloat(boost_level);
 
-        // Update the ad with the new boost level
         const { data, error: updateError } = await supabase
             .from('ads')
             .update({ boost_level: newBoostLevel })

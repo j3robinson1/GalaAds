@@ -1,29 +1,27 @@
 import { supabase } from '../../../utils/supabaseClient';
-import { cors, runMiddleware } from '../../../utils/corsMiddleware';  // Update the path as necessary
+import { cors, runMiddleware } from '../../../utils/corsMiddleware';
 
 export default async function handler(req, res) {
     await runMiddleware(req, res, cors);
 
     const referer = req.headers.referer;
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
-    if (!referer || !referer.startsWith('https://ads.fuzzleprime.com')) {
-      return res.status(403).json({ message: 'Unauthorized: This service can only be accessed from the specified iframe.' });
+    if (!referer || (!isDevelopment && !referer.startsWith('https://ads.fuzzleprime.com')) || 
+        (isDevelopment && !referer.startsWith('http://localhost:3000') && !referer.startsWith('https://localhost:3000'))) {
+      return res.status(403).json({ message: 'Unauthorized: Invalid referer.' });
     }
 
     if (req.method === 'POST') {
-        // Handle ad creation
         return await createAd(req, res);
     } else if (req.method === 'GET') {
-        // Handle getting all ads
         return await getAds(req, res);
     } else {
-        // Handle any other HTTP method
         res.setHeader('Allow', ['GET', 'POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
 
-// Function to create a new ad
 async function createAd(req, res) {
     const { title, content, user_wallet, url, boost_level } = req.body;
     const { data, error } = await supabase
@@ -35,7 +33,6 @@ async function createAd(req, res) {
     if (error) return res.status(400).json({ error: error.message });
     res.status(201).json({ message: 'Ad created successfully', ad: data });
 }
-
 
 async function getAds(req, res) {
     const walletAddress = req.query.walletAddress;

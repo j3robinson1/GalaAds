@@ -5,16 +5,17 @@ export default async function handler(req, res) {
     await runMiddleware(req, res, cors);
 
     const referer = req.headers.referer;
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
-    if (!referer || !referer.startsWith('https://ads.fuzzleprime.com')) {
-      return res.status(403).json({ message: 'Unauthorized: This service can only be accessed from the specified iframe.' });
+    if (!referer || (!isDevelopment && !referer.startsWith('https://ads.fuzzleprime.com')) || 
+        (isDevelopment && !referer.startsWith('http://localhost:3000') && !referer.startsWith('https://localhost:3000'))) {
+      return res.status(403).json({ message: 'Unauthorized: Invalid referer.' });
     }
     
     if (req.method === 'POST') {
         const { id } = req.query;
-        const { walletAddress } = req.body; // Assume walletAddress is sent in the body
+        const { walletAddress } = req.body;
 
-        // Insert a record into ad_activity
         const { error } = await supabase
             .from('ad_activity')
             .insert([
